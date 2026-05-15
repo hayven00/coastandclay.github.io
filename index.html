@@ -1,1668 +1,803 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Basic setup so the browser knows how to read the page -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coast & Clay — Accra</title>
-
-  <!-- Google Fonts: headings use Cormorant, body text uses Outfit -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
-
-  <style>
-    /* =========================
-       SIMPLE RESET
-       Make spacing predictable for every element
-       ========================= */
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    /* =========================
-       COLORS AND FONTS
-       We store colors in variables so we can reuse names like --ink
-       ========================= */
-    :root {
-      --ink: #1a1510;
-      --soil: #3c2a18;
-      --clay: #9c5228;
-      --ochre: #c9922b;
-      --sand: #e9d6b2;
-      --linen: #f6efdc;
-      --white: #fefaf2;
-      --muted: #7b6a52;
-      --border: #e0d0b0;
-      --serif: "Cormorant", Georgia, serif;
-      --sans: "Outfit", sans-serif;
-
-      /*
-        Hero right column: full background image.
-        Swap this URL for your own photo (or a file in your folder, e.g. url("images/hero-food.jpg")).
-      */
-      --hero-food-bg: url("https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=1600&q=82");
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      background: var(--white);
-      color: var(--ink);
-      font-family: var(--sans);
-      font-size: 15px;
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* =========================
-       NAVIGATION BAR (fixed at top)
-       ========================= */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 26px 56px;
-      transition: background 0.4s, padding 0.3s, border-color 0.3s;
-      border-bottom: 1px solid transparent;
-    }
-
-    /* When you scroll down, JavaScript adds the class "scrolled" */
-    nav.scrolled {
-      background: rgba(254, 250, 242, 0.96);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-color: var(--border);
-      padding: 16px 56px;
-    }
-
-    .nav-logo {
-      font-family: var(--serif);
-      font-size: 22px;
-      font-weight: 400;
-      color: var(--ink);
-      text-decoration: none;
-      line-height: 1;
-    }
-
-    .nav-logo span {
-      display: block;
-      font-size: 9px;
-      font-family: var(--sans);
-      font-weight: 300;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--clay);
-      margin-top: 2px;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 44px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-size: 12px;
-      font-weight: 400;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: var(--muted);
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover {
-      color: var(--ink);
-    }
-
-    /* Hamburger button: hidden on desktop, shown on small screens */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 6px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 4px;
-    }
-
-    .hamburger span {
-      display: block;
-      width: 24px;
-      height: 1px;
-      background: var(--ink);
-    }
-
-    /* Full-screen menu for phones */
-    .mobile-menu {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: var(--linen);
-      z-index: 99;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 40px;
-    }
-
-    .mobile-menu.open {
-      display: flex;
-    }
-
-    .mobile-menu a {
-      font-family: var(--serif);
-      font-size: 36px;
-      font-weight: 300;
-      text-decoration: none;
-      color: var(--ink);
-    }
-
-    .mobile-close {
-      position: absolute;
-      top: 28px;
-      right: 32px;
-      background: none;
-      border: none;
-      font-size: 22px;
-      cursor: pointer;
-      color: var(--ink);
-    }
-
-    /* =========================
-       HERO SECTION (top of page)
-       Two columns: text on the left, right column uses a food PHOTO AS BACKGROUND
-       ========================= */
-    #home {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .hero-left {
-      background: var(--soil);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 0 64px 80px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Small decorative dots in the background */
-    .hero-left::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        radial-gradient(circle at 20px 20px, rgba(201, 146, 43, 0.18) 2px, transparent 2px),
-        radial-gradient(circle at 60px 60px, rgba(201, 146, 43, 0.1) 2px, transparent 2px);
-      background-size: 80px 80px;
-      pointer-events: none;
-    }
-
-    .hero-tag {
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--ochre);
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero-tag::before {
-      content: "";
-      width: 30px;
-      height: 1px;
-      background: var(--ochre);
-    }
-
-    .hero-title {
-      font-family: var(--serif);
-      font-size: clamp(50px, 5.8vw, 82px);
-      font-weight: 300;
-      line-height: 1.04;
-      color: var(--white);
-      margin-bottom: 24px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero-title em {
-      font-style: italic;
-      color: var(--ochre);
-    }
-
-    .hero-blurb {
-      font-size: 14px;
-      font-weight: 300;
-      color: rgba(255, 255, 255, 0.5);
-      max-width: 380px;
-      line-height: 1.85;
-      margin-bottom: 52px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero-btns {
-      display: flex;
-      gap: 24px;
-      align-items: center;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 1;
-    }
-
-    .btn-main {
-      font-family: var(--sans);
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: var(--soil);
-      background: var(--ochre);
-      padding: 13px 32px;
-      border-radius: 1px;
-      transition: background 0.2s;
-      border: none;
-      cursor: pointer;
-    }
-
-    .btn-main:hover {
-      background: var(--sand);
-    }
-
-    .btn-outline {
-      font-size: 11px;
-      font-weight: 400;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: rgba(255, 255, 255, 0.6);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-      padding-bottom: 2px;
-      transition: color 0.2s, border-color 0.2s;
-    }
-
-    .btn-outline:hover {
-      color: var(--white);
-      border-color: var(--white);
-    }
-
-    /*
-      Right side of hero: food photo as full background, tinted with the SAME earthy palette
-      as the rest of the site (--soil, --clay, --ochre, --sand) so it does not look like a
-      random bright stock photo sitting beside the warm left column.
-    */
-    .hero-right {
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 120px 48px 80px;
-      /* Fallback while the image loads */
-      background-color: var(--soil);
-      /*
-        Stacked backgrounds (first = painted on top):
-        1) soft bottom shadow in ink/soil — keeps text readable
-        2) diagonal wash in soil → clay → ochre — pulls the photo into your brand colours
-        3) the actual photograph
-      */
-      background-image:
-        linear-gradient(to top, rgba(26, 21, 16, 0.68) 0%, rgba(60, 42, 24, 0.22) 42%, transparent 72%),
-        linear-gradient(
-          155deg,
-          rgba(60, 42, 24, 0.78) 0%,
-          rgba(60, 42, 24, 0.38) 35%,
-          rgba(156, 82, 40, 0.36) 62%,
-          rgba(201, 146, 43, 0.22) 100%
-        ),
-        var(--hero-food-bg);
-      background-size: cover;
-      background-position: center, center, center;
-      background-repeat: no-repeat;
-    }
-
-    /* Thin warm haze (sand/linen) so the photo meets the cream/linen sections below more softly */
-    .hero-right::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 120% 80% at 50% 100%, rgba(233, 214, 178, 0.18) 0%, transparent 50%);
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    /* Coloured stripe at the very top (above the overlay) */
-    .hero-right::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 6px;
-      z-index: 2;
-      background: repeating-linear-gradient(
-        90deg,
-        var(--ochre) 0,
-        var(--ochre) 20px,
-        var(--clay) 20px,
-        var(--clay) 40px,
-        var(--soil) 40px,
-        var(--soil) 60px,
-        var(--sand) 60px,
-        var(--sand) 80px
-      );
-    }
-
-    /* All real HTML content sits above the overlay */
-    .hero-right-content {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      max-width: 360px;
-    }
-
-    .hero-right-info {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      text-align: center;
-    }
-
-    .hri-name {
-      font-family: var(--serif);
-      font-size: 18px;
-      font-weight: 400;
-      color: var(--linen);
-      letter-spacing: 0.04em;
-    }
-
-    .hri-sub {
-      font-size: 11px;
-      font-weight: 300;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: rgba(233, 214, 178, 0.82);
-    }
-
-    .hero-chips {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 28px;
-    }
-
-    /* Chips: sand border + soil-tinted fill so they match the nav / hero-left world */
-    .chip {
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 6px 14px;
-      border: 1px solid rgba(233, 214, 178, 0.45);
-      border-radius: 20px;
-      color: var(--linen);
-      background: rgba(60, 42, 24, 0.5);
-    }
-
-    /* =========================
-       SCROLLING TEXT STRIP
-       ========================= */
-    .strip {
-      background: var(--ochre);
-      overflow: hidden;
-      padding: 14px 0;
-      white-space: nowrap;
-    }
-
-    .strip-track {
-      display: inline-flex;
-      animation: marqueeSlide 22s linear infinite;
-    }
-
-    .strip-item {
-      font-size: 11px;
-      font-weight: 400;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--soil);
-      padding: 0 32px;
-    }
-
-    @keyframes marqueeSlide {
-      from {
-        transform: translateX(0);
-      }
-      to {
-        transform: translateX(-50%);
-      }
-    }
-
-    /* =========================
-       GENERAL SECTION LAYOUT
-       ========================= */
-    .wrap {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 100px 56px;
-    }
-
-    .label {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--clay);
-      margin-bottom: 14px;
-    }
-
-    .label::before {
-      content: "";
-      width: 20px;
-      height: 1px;
-      background: var(--clay);
-    }
-
-    .sec-title {
-      font-family: var(--serif);
-      font-size: clamp(34px, 3.8vw, 52px);
-      font-weight: 300;
-      line-height: 1.1;
-      margin-bottom: 12px;
-    }
-
-    .sec-title em {
-      font-style: italic;
-      color: var(--clay);
-    }
-
-    .sec-sub {
-      font-size: 14px;
-      font-weight: 300;
-      color: var(--muted);
-      max-width: 440px;
-      line-height: 1.8;
-    }
-
-    /* =========================
-       MENU SECTION
-       ========================= */
-    #menu {
-      background: var(--linen);
-    }
-
-    .menu-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 24px;
-      margin-bottom: 48px;
-    }
-
-    .tabs {
-      display: flex;
-      border: 1px solid var(--border);
-      overflow: hidden;
-      border-radius: 2px;
-    }
-
-    .tab-btn {
-      font-family: var(--sans);
-      font-size: 11px;
-      font-weight: 400;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 10px 24px;
-      border: none;
-      border-right: 1px solid var(--border);
-      background: none;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .tab-btn:last-child {
-      border-right: none;
-    }
-
-    .tab-btn.on {
-      background: var(--soil);
-      color: var(--white);
-    }
-
-    .menu-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      border-top: 1px solid var(--border);
-      border-left: 1px solid var(--border);
-    }
-
-    .dish {
-      display: none;
-      padding: 28px 32px;
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      transition: background 0.18s;
-    }
-
-    .dish.show {
-      display: block;
-    }
-
-    .dish:hover {
-      background: rgba(201, 146, 43, 0.05);
-    }
-
-    .dish-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-
-    .dish-name {
-      font-family: var(--serif);
-      font-size: 20px;
-      font-weight: 400;
-      color: var(--ink);
-      line-height: 1.2;
-    }
-
-    .dish-price {
-      font-family: var(--serif);
-      font-size: 18px;
-      font-weight: 300;
-      color: var(--ochre);
-      white-space: nowrap;
-    }
-
-    .dish-desc {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .dtag {
-      display: inline-block;
-      margin-top: 12px;
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 3px 9px;
-      border-radius: 20px;
-    }
-
-    .dtag-sig {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .dtag-veg {
-      background: #ecfdf5;
-      color: #065f46;
-    }
-
-    .dtag-spicy {
-      background: #fff7ed;
-      color: #c2410c;
-    }
-
-    .dtag-new {
-      background: #eff6ff;
-      color: #1d4ed8;
-    }
-
-    /* =========================
-       LOCATION SECTION (dark background)
-       ========================= */
-    #location {
-      background: var(--soil);
-    }
-
-    #location .label {
-      color: var(--ochre);
-    }
-
-    #location .label::before {
-      background: var(--ochre);
-    }
-
-    #location .sec-title {
-      color: var(--white);
-    }
-
-    #location .sec-sub {
-      color: rgba(255, 255, 255, 0.45);
-    }
-
-    .loc-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 2px;
-      margin-top: 52px;
-    }
-
-    .loc-card {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 40px 36px;
-    }
-
-    .loc-card-title {
-      font-family: var(--serif);
-      font-size: 19px;
-      font-weight: 300;
-      color: var(--white);
-      margin-bottom: 26px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .loc-card-title svg {
-      opacity: 0.45;
-      flex-shrink: 0;
-    }
-
-    .hours-list {
-      list-style: none;
-    }
-
-    .hr-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 11px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      font-size: 14px;
-      font-weight: 300;
-    }
-
-    .hr-row:last-child {
-      border: none;
-    }
-
-    .hr-day {
-      color: rgba(255, 255, 255, 0.45);
-    }
-
-    .hr-time {
-      color: var(--white);
-    }
-
-    .hr-off {
-      color: var(--ochre);
-      font-size: 12px;
-    }
-
-    .addr {
-      font-size: 15px;
-      font-weight: 300;
-      line-height: 1.9;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 28px;
-    }
-
-    /* Fake map look (CSS blocks), not a real map */
-    .map {
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      background: rgba(255, 255, 255, 0.05);
-      position: relative;
-      overflow: hidden;
-      border-radius: 1px;
-    }
-
-    .mr {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .mr.h {
-      left: 0;
-      right: 0;
-    }
-
-    .mr.v {
-      top: 0;
-      bottom: 0;
-    }
-
-    .mb {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.04);
-      border-radius: 1px;
-    }
-
-    .mpin {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .mdot {
-      width: 12px;
-      height: 12px;
-      background: var(--ochre);
-      border-radius: 50%;
-      animation: pinPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pinPulse {
-      0%,
-      100% {
-        box-shadow: 0 0 0 4px rgba(201, 146, 43, 0.2);
-      }
-      50% {
-        box-shadow: 0 0 0 10px rgba(201, 146, 43, 0.06);
-      }
-    }
-
-    .mlabel {
-      margin-top: 8px;
-      background: var(--ink);
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      color: var(--white);
-      padding: 4px 10px;
-      border-radius: 1px;
-      white-space: nowrap;
-    }
-
-    .dir-a {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: var(--ochre);
-      margin-top: 18px;
-      transition: gap 0.2s;
-    }
-
-    .dir-a:hover {
-      gap: 14px;
-    }
-
-    .info-r {
-      display: flex;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      font-size: 14px;
-      font-weight: 300;
-    }
-
-    .info-r:last-child {
-      border: none;
-    }
-
-    .ik {
-      color: rgba(255, 255, 255, 0.45);
-    }
-
-    .iv {
-      color: var(--white);
-      text-align: right;
-    }
-
-    /* =========================
-       CONTACT SECTION
-       ========================= */
-    #contact {
-      background: var(--white);
-    }
-
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      margin-top: 56px;
-    }
-
-    .cdet {
-      display: flex;
-      gap: 18px;
-      padding: 22px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .cdet:first-child {
-      border-top: 1px solid var(--border);
-    }
-
-    .cico {
-      width: 40px;
-      height: 40px;
-      background: var(--linen);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
-      border-radius: 1px;
-    }
-
-    .clabel {
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 5px;
-    }
-
-    .cval {
-      font-family: var(--serif);
-      font-size: 17px;
-      font-weight: 300;
-      color: var(--ink);
-    }
-
-    .cval a {
-      color: inherit;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .cval a:hover {
-      color: var(--clay);
-    }
-
-    .contact-note {
-      margin-top: 36px;
-      padding: 26px 28px;
-      background: var(--linen);
-      border-left: 3px solid var(--ochre);
-    }
-
-    .contact-note strong {
-      font-family: var(--serif);
-      font-size: 16px;
-      font-weight: 400;
-      color: var(--ink);
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .contact-note p {
-      font-size: 14px;
-      font-weight: 300;
-      color: var(--muted);
-      line-height: 1.8;
-    }
-
-    .map-big {
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      background: var(--linen);
-      position: relative;
-      overflow: hidden;
-      border-radius: 2px;
-      border: 1px solid var(--border);
-    }
-
-    .mr2 {
-      position: absolute;
-      background: rgba(60, 42, 24, 0.07);
-    }
-
-    .mr2.h {
-      left: 0;
-      right: 0;
-    }
-
-    .mr2.v {
-      top: 0;
-      bottom: 0;
-    }
-
-    .mb2 {
-      position: absolute;
-      background: rgba(60, 42, 24, 0.05);
-      border-radius: 1px;
-    }
-
-    .mpin2 {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .mdot2 {
-      width: 14px;
-      height: 14px;
-      background: var(--clay);
-      border-radius: 50%;
-      animation: pinPulse2 2s ease-in-out infinite;
-    }
-
-    @keyframes pinPulse2 {
-      0%,
-      100% {
-        box-shadow: 0 0 0 5px rgba(156, 82, 40, 0.2);
-      }
-      50% {
-        box-shadow: 0 0 0 12px rgba(156, 82, 40, 0.07);
-      }
-    }
-
-    .mlabel2 {
-      margin-top: 9px;
-      background: var(--soil);
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      color: var(--white);
-      padding: 5px 12px;
-      border-radius: 1px;
-      white-space: nowrap;
-    }
-
-    .map-caption {
-      margin-top: 14px;
-      font-size: 12px;
-      font-weight: 300;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .map-caption a {
-      font-size: 11px;
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: var(--clay);
-      transition: color 0.2s;
-    }
-
-    .map-caption a:hover {
-      color: var(--soil);
-    }
-
-    /* =========================
-       FOOTER
-       ========================= */
-    footer {
-      background: var(--ink);
-      padding: 48px 56px;
-    }
-
-    .footer-kente {
-      height: 3px;
-      background: repeating-linear-gradient(
-        90deg,
-        var(--ochre) 0,
-        var(--ochre) 16px,
-        var(--clay) 16px,
-        var(--clay) 32px,
-        var(--soil) 32px,
-        var(--soil) 48px,
-        var(--sand) 48px,
-        var(--sand) 64px
-      );
-      margin-bottom: 32px;
-      opacity: 0.4;
-    }
-
-    .footer-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 32px;
-      padding-bottom: 36px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .footer-logo {
-      font-family: var(--serif);
-      font-size: 22px;
-      font-weight: 300;
-      color: var(--white);
-      line-height: 1;
-    }
-
-    .footer-logo span {
-      display: block;
-      font-family: var(--sans);
-      font-size: 9px;
-      font-weight: 300;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--ochre);
-      margin-top: 4px;
-    }
-
-    .footer-tagline {
-      font-size: 13px;
-      font-weight: 300;
-      color: rgba(255, 255, 255, 0.35);
-      max-width: 240px;
-      line-height: 1.7;
-      margin-top: 14px;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .footer-links a {
-      font-size: 12px;
-      font-weight: 300;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: rgba(255, 255, 255, 0.4);
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover {
-      color: var(--white);
-    }
-
-    .footer-contact p {
-      font-size: 13px;
-      font-weight: 300;
-      color: rgba(255, 255, 255, 0.4);
-      line-height: 1.7;
-    }
-
-    .footer-contact a {
-      color: rgba(255, 255, 255, 0.4);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .footer-contact a:hover {
-      color: var(--ochre);
-    }
-
-    .footer-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 28px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .footer-copy {
-      font-size: 12px;
-      font-weight: 300;
-      color: rgba(255, 255, 255, 0.25);
-    }
-
-    /* Small fade-in blocks (used on some cards) */
-    .reveal {
-      opacity: 0;
-      transform: translateY(22px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .reveal.in {
-      opacity: 1;
-      transform: none;
-    }
-
-    /* =========================
-       MOBILE LAYOUT
-       When the screen is narrow, switch to one column
-       ========================= */
-    @media (max-width: 960px) {
-      nav {
-        padding: 18px 24px;
-      }
-
-      nav.scrolled {
-        padding: 12px 24px;
-      }
-
-      .nav-links {
-        display: none;
-      }
-
-      .hamburger {
-        display: flex;
-      }
-
-      #home {
-        grid-template-columns: 1fr;
-        min-height: auto;
-      }
-
-      .hero-left {
-        padding: 100px 28px 64px;
-        min-height: 60vh;
-      }
-
-      .hero-right {
-        padding: 60px 28px 56px;
-        min-height: 52vh;
-      }
-
-      .wrap {
-        padding: 72px 28px;
-      }
-
-      .menu-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .menu-head {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .loc-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .contact-grid {
-        grid-template-columns: 1fr;
-        gap: 48px;
-      }
-
-      footer {
-        padding: 40px 24px;
-      }
-
-      .footer-top {
-        flex-direction: column;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .hero-title {
-        font-size: 42px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coast & Clay — Accra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:    #1C1410;
+  --brown:  #3A2012;
+  --clay:   #8B5E3C;
+  --warm:   #C4895A;
+  --sand:   #E2C9A8;
+  --linen:  #F2EAD8;
+  --cream:  #F8F3EA;
+  --white:  #FDFAF4;
+  --muted:  #7A6A56;
+  --border: rgba(138,94,60,0.13);
+  --serif:  'Cormorant Garamond', Georgia, serif;
+  --sans:   'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--cream); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.65; overflow-x: hidden; }
+
+/* ══ NAV ══ */
+#nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 32px 64px;
+  transition: background 0.4s, padding 0.3s, box-shadow 0.3s;
+}
+#nav.scrolled {
+  background: rgba(248,243,234,0.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 18px 64px;
+  box-shadow: 0 1px 0 var(--border);
+}
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 20px; font-weight: 400;
+  color: var(--white); text-decoration: none;
+  letter-spacing: 0.02em; line-height: 1.1;
+  transition: color 0.3s;
+}
+.nav-logo span {
+  display: block; font-family: var(--sans);
+  font-size: 8px; font-weight: 400;
+  letter-spacing: 0.28em; text-transform: uppercase;
+  color: rgba(255,255,255,0.45); margin-top: 3px;
+  transition: color 0.3s;
+}
+#nav.scrolled .nav-logo { color: var(--ink); }
+#nav.scrolled .nav-logo span { color: var(--clay); }
+
+.nav-links {
+  display: flex; gap: 44px; list-style: none;
+  position: absolute; left: 50%; transform: translateX(-50%);
+}
+.nav-links a {
+  font-size: 11px; font-weight: 400;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(255,255,255,0.6); text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--white); }
+#nav.scrolled .nav-links a { color: var(--muted); }
+#nav.scrolled .nav-links a:hover { color: var(--ink); }
+
+.nav-contact {
+  font-size: 10.5px; font-weight: 400;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(255,255,255,0.55); text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.22);
+  padding-bottom: 2px; transition: all 0.2s;
+}
+.nav-contact:hover { color: var(--white); border-color: rgba(255,255,255,0.6); }
+#nav.scrolled .nav-contact { color: var(--clay); border-color: rgba(138,94,60,0.3); }
+#nav.scrolled .nav-contact:hover { border-color: var(--clay); }
+
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer; padding: 4px;
+}
+.hamburger span { display: block; width: 22px; height: 1px; background: var(--white); transition: background 0.3s; }
+#nav.scrolled .hamburger span { background: var(--ink); }
+
+.mobile-menu {
+  display: none; position: fixed; inset: 0;
+  background: var(--white); z-index: 199;
+  flex-direction: column; justify-content: center; align-items: center; gap: 36px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: var(--serif); font-size: 2.6rem;
+  font-weight: 300; color: var(--ink); text-decoration: none;
+  letter-spacing: 0.02em; transition: color 0.2s;
+}
+.mobile-menu a:hover { color: var(--clay); }
+.mob-close {
+  position: absolute; top: 28px; right: 32px;
+  background: none; border: none; font-size: 20px;
+  cursor: pointer; color: var(--muted);
+}
+
+/* ══ HERO ══ */
+#home {
+  position: relative; min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(to bottom, rgba(28,20,16,0.52) 0%, rgba(28,20,16,0.35) 45%, rgba(28,20,16,0.65) 100%),
+    url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1800&q=80');
+  background-size: cover; background-position: center;
+}
+.hero-content {
+  position: relative; z-index: 1;
+  max-width: 680px; padding: 0 32px;
+}
+.hero-eyebrow {
+  font-size: 9.5px; font-weight: 400;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--sand); margin-bottom: 22px;
+  opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+}
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(52px, 7.5vw, 100px);
+  font-weight: 300; line-height: 1.02;
+  color: var(--white); letter-spacing: 0.01em;
+  margin-bottom: 18px;
+  opacity: 0; animation: fadeUp 0.8s 0.35s forwards;
+}
+.hero-title em { font-style: italic; color: var(--sand); }
+.hero-tagline {
+  font-family: var(--serif);
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 300; font-style: italic;
+  color: rgba(253,250,244,0.55);
+  margin-bottom: 44px; line-height: 1.5;
+  opacity: 0; animation: fadeUp 0.8s 0.5s forwards;
+}
+.hero-btns {
+  display: flex; gap: 20px;
+  justify-content: center; align-items: center; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp 0.8s 0.65s forwards;
+}
+.btn-primary {
+  font-family: var(--sans); font-size: 10.5px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--brown); background: var(--sand);
+  padding: 13px 34px; text-decoration: none; border: none;
+  cursor: pointer; transition: background 0.2s; display: inline-block;
+}
+.btn-primary:hover { background: var(--white); }
+.btn-ghost {
+  font-size: 10.5px; font-weight: 400;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(253,250,244,0.55); text-decoration: none;
+  border-bottom: 1px solid rgba(253,250,244,0.22); padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.btn-ghost:hover { color: var(--white); border-color: rgba(253,250,244,0.6); }
+
+.scroll-hint {
+  position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  z-index: 1; opacity: 0; animation: fadeUp 0.8s 1s forwards;
+}
+.scroll-hint span { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(253,250,244,0.35); }
+.scroll-line { width: 1px; height: 36px; background: linear-gradient(to bottom, rgba(253,250,244,0.35), transparent); }
+
+/* ══ TICKER ══ */
+.ticker { background: var(--brown); overflow: hidden; padding: 12px 0; }
+.ticker-track { display: inline-flex; animation: ticker 30s linear infinite; white-space: nowrap; }
+.ticker-item { font-size: 9.5px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(226,201,168,0.65); padding: 0 44px; }
+.ticker-dot { color: var(--warm); opacity: 0.35; font-size: 6px; align-self: center; flex-shrink: 0; }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ══ SHARED ══ */
+.section-wrap { max-width: 1080px; margin: 0 auto; padding: 96px 64px; }
+
+.eyebrow {
+  font-size: 9.5px; font-weight: 500;
+  letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--clay); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 12px;
+}
+.eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--clay); flex-shrink: 0; }
+
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(32px, 3.5vw, 52px);
+  font-weight: 300; line-height: 1.1; color: var(--ink);
+}
+.section-title em { font-style: italic; color: var(--clay); }
+
+/* ══ MENU ══ */
+#menu { background: var(--linen); }
+
+.menu-head {
+  display: flex; justify-content: space-between;
+  align-items: flex-end; flex-wrap: wrap; gap: 24px; margin-bottom: 44px;
+}
+.tabs {
+  display: flex; background: rgba(138,94,60,0.08);
+  padding: 3px; gap: 2px;
+}
+.tab-btn {
+  font-family: var(--sans); font-size: 10.5px; font-weight: 400;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 9px 22px; border: none; background: transparent;
+  color: var(--muted); cursor: pointer; transition: all 0.2s;
+}
+.tab-btn.on { background: var(--brown); color: var(--white); }
+.tab-btn:not(.on):hover { color: var(--ink); }
+
+.menu-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
+}
+.dish { display: none; }
+.dish.show { display: block; }
+.dish-inner {
+  background: var(--white); padding: 26px 30px; height: 100%;
+  transition: background 0.18s;
+}
+.dish-inner:hover { background: var(--cream); }
+.dish-top {
+  display: flex; justify-content: space-between;
+  align-items: baseline; gap: 16px; margin-bottom: 8px;
+}
+.dish-name { font-family: var(--serif); font-size: 19px; font-weight: 400; color: var(--ink); line-height: 1.2; }
+.dish-price { font-family: var(--serif); font-size: 17px; font-weight: 300; color: var(--warm); white-space: nowrap; flex-shrink: 0; }
+.dish-desc { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.7; margin-bottom: 10px; }
+.dish-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.dtag { font-size: 9px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
+.sig   { background: #fef3c7; color: #92400e; }
+.veg   { background: #ecfdf5; color: #065f46; }
+.spicy { background: #fff7ed; color: #c2410c; }
+.new   { background: #eff6ff; color: #1d4ed8; }
+.cont  { background: #f3f0ff; color: #4c1d95; }
+
+.menu-note {
+  margin-top: 24px; font-size: 12px; font-weight: 300; color: var(--muted);
+  padding-top: 20px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.menu-note::before { content: ''; width: 16px; height: 1px; background: var(--clay); flex-shrink: 0; }
+
+/* ══ ABOUT ══ */
+#about { background: var(--white); }
+.about-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.about-img-wrap { position: relative; aspect-ratio: 4/5; overflow: hidden; }
+.about-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.7s ease; }
+.about-img-wrap:hover img { transform: scale(1.03); }
+.about-img-label {
+  position: absolute; bottom: 20px; left: 20px;
+  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(253,250,244,0.6); background: rgba(28,20,16,0.38);
+  padding: 5px 12px; backdrop-filter: blur(4px);
+}
+.about-text { display: flex; flex-direction: column; gap: 16px; }
+.about-body { font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.9; }
+.about-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 8px;
+}
+.astat { background: var(--cream); padding: 20px 16px; text-align: center; }
+.astat-num { font-family: var(--serif); font-size: 30px; font-weight: 300; color: var(--clay); line-height: 1; margin-bottom: 5px; }
+.astat-label { font-size: 9.5px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+/* ══ CONTACT (with location inside) ══ */
+#contact { background: var(--brown); }
+
+.contact-eyebrow { color: var(--warm) !important; }
+.contact-eyebrow::before { background: var(--warm) !important; }
+.contact-title { color: var(--white) !important; }
+
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; margin-top: 52px; align-items: start;
+}
+
+/* Left — contact details */
+.contact-details { display: flex; flex-direction: column; gap: 0; }
+.citem {
+  display: flex; gap: 18px; align-items: flex-start;
+  padding: 22px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.citem:first-child { border-top: 1px solid rgba(255,255,255,0.07); }
+.cicon {
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.clabel { font-size: 9px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--warm); margin-bottom: 4px; }
+.cval { font-size: 14.5px; font-weight: 300; color: rgba(253,250,244,0.85); line-height: 1.5; }
+.cval a { color: rgba(253,250,244,0.85); text-decoration: none; transition: color 0.2s; }
+.cval a:hover { color: var(--white); }
+
+.contact-note {
+  margin-top: 28px; padding: 22px 24px;
+  background: rgba(255,255,255,0.04);
+  border-left: 2px solid var(--warm);
+}
+.contact-note strong { display: block; font-size: 13px; font-weight: 500; color: var(--white); margin-bottom: 6px; }
+.contact-note p { font-size: 13px; font-weight: 300; color: rgba(253,250,244,0.45); line-height: 1.8; }
+
+/* Right — location block (new style: stacked cards) */
+.location-stack { display: flex; flex-direction: column; gap: 2px; }
+
+.loc-block {
+  background: rgba(255,255,255,0.04);
+  padding: 28px 28px;
+  transition: background 0.2s;
+}
+.loc-block:hover { background: rgba(255,255,255,0.07); }
+
+.loc-block-title {
+  font-size: 9px; font-weight: 500;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--warm); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.loc-block-title svg { opacity: 0.5; }
+
+.hours-rows { display: flex; flex-direction: column; }
+.hr {
+  display: flex; justify-content: space-between;
+  padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  gap: 12px;
+}
+.hr:last-child { border-bottom: none; }
+.hr-day { font-size: 13px; font-weight: 300; color: rgba(253,250,244,0.45); }
+.hr-time { font-size: 13px; font-weight: 400; color: var(--sand); }
+
+.loc-address {
+  font-family: var(--serif); font-size: 20px;
+  font-weight: 300; font-style: italic;
+  color: var(--white); line-height: 1.5; margin-bottom: 16px;
+}
+
+.map {
+  position: relative; width: 100%; height: 110px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden; margin-bottom: 16px;
+}
+.mr { position: absolute; background: rgba(255,255,255,0.06); }
+.mr.h { left: 0; right: 0; }
+.mr.v { top: 0; bottom: 0; }
+.mb { position: absolute; background: rgba(255,255,255,0.05); border-radius: 1px; }
+.mpin { position: absolute; top: 34%; left: 43%; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.mdot { width: 8px; height: 8px; background: var(--warm); border-radius: 50%; box-shadow: 0 0 0 3px rgba(196,137,90,0.2); }
+.mlabel { font-size: 9px; font-weight: 500; letter-spacing: 0.06em; color: var(--warm); background: rgba(58,32,18,0.85); padding: 2px 7px; white-space: nowrap; }
+
+.dir-link {
+  font-size: 10.5px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--warm); text-decoration: none;
+  border-bottom: 1px solid rgba(196,137,90,0.3); padding-bottom: 2px;
+  display: inline-block; transition: border-color 0.2s;
+}
+.dir-link:hover { border-color: var(--warm); }
+
+.info-rows { display: flex; flex-direction: column; }
+.irow {
+  display: flex; justify-content: space-between;
+  padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.irow:last-child { border-bottom: none; }
+.ikey { font-size: 12.5px; font-weight: 300; color: rgba(253,250,244,0.35); }
+.ival { font-size: 12.5px; font-weight: 400; color: rgba(253,250,244,0.75); text-align: right; }
+
+/* ══ FOOTER — ultra minimal ══ */
+footer {
+  background: var(--ink);
+  padding: 52px 64px 28px;
+  text-align: center;
+}
+.footer-logo-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  margin-bottom: 20px;
+}
+.footer-name {
+  font-family: var(--serif); font-size: 24px; font-weight: 300;
+  color: rgba(255,255,255,0.75); letter-spacing: 0.04em; text-decoration: none;
+}
+.footer-sub {
+  font-size: 8px; font-weight: 400; letter-spacing: 0.28em;
+  text-transform: uppercase; color: rgba(255,255,255,0.2);
+}
+.footer-nav {
+  display: flex; justify-content: center; gap: 36px;
+  list-style: none; margin-bottom: 36px;
+}
+.footer-nav a {
+  font-size: 10.5px; font-weight: 300; letter-spacing: 0.14em;
+  text-transform: uppercase; color: rgba(255,255,255,0.28);
+  text-decoration: none; transition: color 0.2s;
+}
+.footer-nav a:hover { color: rgba(255,255,255,0.6); }
+.footer-rule { width: 40px; height: 1px; background: rgba(255,255,255,0.08); margin: 0 auto 24px; }
+.footer-copy {
+  font-size: 11px; font-weight: 300;
+  color: rgba(255,255,255,0.15); letter-spacing: 0.06em;
+}
+
+/* ══ REVEAL ══ */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.in { opacity: 1; transform: none; }
+.d1 { transition-delay: 0.1s; }
+.d2 { transition-delay: 0.2s; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 960px) {
+  #nav { padding: 22px 28px; }
+  #nav.scrolled { padding: 16px 28px; }
+  .nav-links, .nav-contact { display: none; }
+  .hamburger { display: flex; }
+  .section-wrap { padding: 72px 28px; }
+  .menu-head { flex-direction: column; align-items: flex-start; }
+  .menu-grid { grid-template-columns: 1fr; }
+  .about-layout { grid-template-columns: 1fr; gap: 40px; }
+  .about-img-wrap { aspect-ratio: 16/9; }
+  .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+  footer { padding: 44px 28px 24px; }
+  .footer-nav { flex-wrap: wrap; gap: 20px; }
+}
+@media (max-width: 600px) {
+  .hero-title { font-size: clamp(44px, 12vw, 64px); }
+  .about-stats { grid-template-columns: 1fr; }
+  .tabs { flex-wrap: wrap; }
+}
+</style>
 </head>
 <body>
 
-  <!-- ========== NAVIGATION ========== -->
-  <nav id="nav">
-    <a href="#home" class="nav-logo">
-      Coast &amp; Clay
-      <span>Restaurant · Ridge, Accra</span>
-    </a>
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mob">
+  <button class="mob-close" id="mobClose">✕</button>
+  <a href="#home" class="ml">Home</a>
+  <a href="#menu" class="ml">Menu</a>
+  <a href="#about" class="ml">About</a>
+  <a href="#contact" class="ml">Contact</a>
+</div>
 
-    <ul class="nav-links">
-      <li><a href="#home">Home</a></li>
-      <li><a href="#menu">Menu</a></li>
-      <li><a href="#location">Location</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
+<!-- NAV -->
+<nav id="nav">
+  <a href="#home" class="nav-logo">Coast &amp; Clay<span>Ridge · Accra · Ghana</span></a>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-contact">Find us</a>
+  <button class="hamburger" id="hbg" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
-    <button class="hamburger" id="hbg" type="button" aria-label="Open menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-  </nav>
-
-  <!-- Phone menu (hidden until opened) -->
-  <div class="mobile-menu" id="mob">
-    <button class="mobile-close" id="mobClose" type="button" aria-label="Close menu">&#x2715;</button>
-    <a href="#home" class="ml">Home</a>
-    <a href="#menu" class="ml">Menu</a>
-    <a href="#location" class="ml">Location</a>
-    <a href="#contact" class="ml">Contact</a>
-  </div>
-
-  <!-- ========== HERO ========== -->
-  <section id="home">
-    <div class="hero-left">
-      <span class="hero-tag">Authentic Ghanaian · Ridge, Accra</span>
-      <h1 class="hero-title">Where the coast<br>meets the <em>clay.</em></h1>
-      <p class="hero-blurb">
-        Coast &amp; Clay is a restaurant in Accra serving Ghanaian dishes with a modern touch.
-        We focus on good food, warm hospitality, and a relaxed dining experience inspired by local culture and everyday flavour.
-      </p>
-      <div class="hero-btns">
-        <a href="#menu" class="btn-main">See Our Menu</a>
-        <a href="#contact" class="btn-outline">Find Us</a>
-      </div>
-    </div>
-
-    <!-- Right column: background image is set in CSS (--hero-food-bg on .hero-right). -->
-    <div class="hero-right" aria-label="Hero area with grilled fish and vegetables as a background photograph">
-      <div class="hero-right-content">
-        <div class="hero-right-info">
-          <p class="hri-name">Grilled fish &amp; veg</p>
-          <p class="hri-sub">Coastal cooking, charcoal heat</p>
-        </div>
-
-        <div class="hero-chips">
-          <span class="chip">Dine In</span>
-          <span class="chip">Takeaway</span>
-          <span class="chip">Family Friendly</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== SCROLLING STRIP ========== -->
-  <div class="strip" aria-hidden="true">
-    <div class="strip-track">
-      <span class="strip-item">Jollof Rice ·</span>
-      <span class="strip-item">Fufu &amp; Soup ·</span>
-      <span class="strip-item">Waakye ·</span>
-      <span class="strip-item">Kelewele ·</span>
-      <span class="strip-item">Grilled Tilapia ·</span>
-      <span class="strip-item">Banku &amp; Okro ·</span>
-      <span class="strip-item">Sobolo ·</span>
-      <span class="strip-item">Kontomire Stew ·</span>
-      <!-- Same line repeated so the animation can loop smoothly -->
-      <span class="strip-item">Jollof Rice ·</span>
-      <span class="strip-item">Fufu &amp; Soup ·</span>
-      <span class="strip-item">Waakye ·</span>
-      <span class="strip-item">Kelewele ·</span>
-      <span class="strip-item">Grilled Tilapia ·</span>
-      <span class="strip-item">Banku &amp; Okro ·</span>
-      <span class="strip-item">Sobolo ·</span>
-      <span class="strip-item">Kontomire Stew ·</span>
+<!-- ══ HOME ══ -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Est. 2019 · Ridge, Accra</p>
+    <h1 class="hero-title">Coast <em>&amp;</em> Clay</h1>
+    <p class="hero-tagline">Good food, honest cooking, warm welcome.</p>
+    <div class="hero-btns">
+      <a href="#menu" class="btn-primary">See the menu</a>
+      <a href="#about" class="btn-ghost">Our story</a>
     </div>
   </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
 
-  <!-- ========== MENU ========== -->
-  <section id="menu">
-    <div class="wrap">
-      <div class="menu-head">
-        <div>
-          <span class="label">Our Menu</span>
-          <h2 class="sec-title">Good food, every <em>day.</em></h2>
-          <p class="sec-sub">
-            Made fresh from local ingredients. Everything on this menu is a nod to what Ghanaian cooking does best — bold flavour, nothing wasted.
-          </p>
-        </div>
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">Mon – Fri · 8am – 10pm</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Sat &amp; Sun · 11am – 12am</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Ridge, Accra</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Dine in &amp; Takeaway</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Ghanaian &amp; Continental</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">+233 55 474 4061</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Mon – Fri · 8am – 10pm</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Sat &amp; Sun · 11am – 12am</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Ridge, Accra</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Dine in &amp; Takeaway</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Ghanaian &amp; Continental</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">+233 55 474 4061</span><span class="ticker-dot">◆</span>
+  </div>
+</div>
 
-        <div class="tabs">
-          <button type="button" class="tab-btn on" data-cat="starters">Starters</button>
-          <button type="button" class="tab-btn" data-cat="mains">Mains</button>
-          <button type="button" class="tab-btn" data-cat="drinks">Drinks</button>
-        </div>
+<!-- ══ MENU ══ -->
+<section id="menu">
+  <div class="section-wrap">
+    <div class="menu-head reveal">
+      <div>
+        <p class="eyebrow">What we serve</p>
+        <h2 class="section-title">The <em>menu</em></h2>
       </div>
-
-      <div class="menu-grid">
-
-        <div class="dish show" data-cat="starters">
-          <div class="dish-top"><span class="dish-name">Kelewele</span><span class="dish-price">GH₵ 35</span></div>
-          <p class="dish-desc">Ripe plantain cubed and fried with ginger, cloves, and chilli. Served with roasted groundnuts on the side.</p>
-          <span class="dtag dtag-veg">Vegetarian</span>
-        </div>
-        <div class="dish show" data-cat="starters">
-          <div class="dish-top"><span class="dish-name">Accra Fritters</span><span class="dish-price">GH₵ 40</span></div>
-          <p class="dish-desc">Crispy black-eyed pea fritters spiced with scotch bonnet and onion. Served with a tamarind dipping sauce.</p>
-          <span class="dtag dtag-sig">House Favourite</span>
-        </div>
-        <div class="dish show" data-cat="starters">
-          <div class="dish-top"><span class="dish-name">Garden Egg Salad</span><span class="dish-price">GH₵ 38</span></div>
-          <p class="dish-desc">Roasted garden eggs, smoked herring, fresh tomatoes, and a palm oil dressing.</p>
-          <span class="dtag dtag-new">New</span>
-        </div>
-        <div class="dish show" data-cat="starters">
-          <div class="dish-top"><span class="dish-name">Corn &amp; Groundnut</span><span class="dish-price">GH₵ 25</span></div>
-          <p class="dish-desc">Charred sweet corn with salted roasted groundnuts and dried chilli. A timeless Ghanaian street pairing, done properly.</p>
-          <span class="dtag dtag-veg">Vegetarian</span>
-        </div>
-
-        <div class="dish" data-cat="mains">
-          <div class="dish-top"><span class="dish-name">Jollof Rice</span><span class="dish-price">GH₵ 95</span></div>
-          <p class="dish-desc">Slow-cooked in a smoky tomato base with fragrant spices. Served with fried plantain and your choice of chicken or fish.</p>
-          <span class="dtag dtag-sig">House Favourite</span>
-        </div>
-        <div class="dish" data-cat="mains">
-          <div class="dish-top"><span class="dish-name">Fufu &amp; Light Soup</span><span class="dish-price">GH₵ 110</span></div>
-          <p class="dish-desc">Hand-pounded cassava and plantain fufu in a clear palm-nut broth with goat meat, garden eggs, and fresh peppers.</p>
-          <span class="dtag dtag-spicy">Spicy</span>
-        </div>
-        <div class="dish" data-cat="mains">
-          <div class="dish-top"><span class="dish-name">Grilled Whole Tilapia</span><span class="dish-price">GH₵ 130</span></div>
-          <p class="dish-desc">Fresh tilapia in a ginger-pepper rub, charcoal grilled until the skin crisps. Served with banku, shito, and avocado salad.</p>
-          <span class="dtag dtag-sig">Chef's Pick</span>
-        </div>
-        <div class="dish" data-cat="mains">
-          <div class="dish-top"><span class="dish-name">Waakye Platter</span><span class="dish-price">GH₵ 90</span></div>
-          <p class="dish-desc">Rice and beans cooked in sorghum leaves with spaghetti, boiled egg, shito, and your choice of protein.</p>
-        </div>
-        <div class="dish" data-cat="mains">
-          <div class="dish-top"><span class="dish-name">Banku &amp; Okro Soup</span><span class="dish-price">GH₵ 100</span></div>
-          <p class="dish-desc">Fermented corn and cassava dumplings in a thick okro soup with smoked fish and dried shrimp.</p>
-          <span class="dtag dtag-spicy">Spicy</span>
-        </div>
-        <div class="dish" data-cat="mains">
-          <div class="dish-top"><span class="dish-name">Kontomire Stew &amp; Yam</span><span class="dish-price">GH₵ 85</span></div>
-          <p class="dish-desc">Cocoyam leaves in palm oil with smoked fish and garden eggs. Served with boiled yam or rice. Vegetarian version available.</p>
-          <span class="dtag dtag-veg">Veg. option</span>
-        </div>
-
-        <div class="dish" data-cat="drinks">
-          <div class="dish-top"><span class="dish-name">Sobolo</span><span class="dish-price">GH₵ 20</span></div>
-          <p class="dish-desc">Chilled hibiscus drink brewed with ginger, cloves, and pineapple. Deep red, naturally sweet, completely refreshing.</p>
-          <span class="dtag dtag-sig">House Favourite</span>
-        </div>
-        <div class="dish" data-cat="drinks">
-          <div class="dish-top"><span class="dish-name">Fresh Coconut Water</span><span class="dish-price">GH₵ 18</span></div>
-          <p class="dish-desc">Straight from the shell. Chilled and served as it is — nothing added, nothing taken away.</p>
-        </div>
-        <div class="dish" data-cat="drinks">
-          <div class="dish-top"><span class="dish-name">Ginger &amp; Lemon Brew</span><span class="dish-price">GH₵ 22</span></div>
-          <p class="dish-desc">House-made ginger infusion with fresh lemon and a pinch of turmeric. Served hot or over ice.</p>
-          <span class="dtag dtag-new">New</span>
-        </div>
-        <div class="dish" data-cat="drinks">
-          <div class="dish-top"><span class="dish-name">Palm Wine</span><span class="dish-price">GH₵ 30</span></div>
-          <p class="dish-desc">Freshly tapped, lightly fermented. Slightly cloudy and naturally effervescent — as it should be.</p>
-          <span class="dtag dtag-sig">Traditional</span>
-        </div>
-        <div class="dish" data-cat="drinks">
-          <div class="dish-top"><span class="dish-name">Malta &amp; Ice</span><span class="dish-price">GH₵ 15</span></div>
-          <p class="dish-desc">Cold Malta served over ice. A Ghanaian classic — nothing complicated about it.</p>
-        </div>
-        <div class="dish" data-cat="drinks">
-          <div class="dish-top"><span class="dish-name">Bissap Lemonade</span><span class="dish-price">GH₵ 24</span></div>
-          <p class="dish-desc">Hibiscus and lemon blended with a hint of mint. Light, sharp, and just sweet enough.</p>
-          <span class="dtag dtag-new">New</span>
-        </div>
-
+      <div class="tabs">
+        <button class="tab-btn on" data-cat="starters">Starters</button>
+        <button class="tab-btn" data-cat="mains">Mains</button>
+        <button class="tab-btn" data-cat="continental">Continental</button>
+        <button class="tab-btn" data-cat="drinks">Drinks</button>
       </div>
     </div>
-  </section>
+    <div class="menu-grid">
 
-  <!-- ========== LOCATION ========== -->
-  <section id="location">
-    <div class="wrap">
-      <span class="label">Find Us</span>
-      <h2 class="sec-title">Hours <em>&amp;</em> Location</h2>
-      <p class="sec-sub">Walk-ins are welcome. We're open most of the week — come as you are.</p>
+      <!-- STARTERS -->
+      <div class="dish show" data-cat="starters"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Kelewele Bites</span><span class="dish-price">GH₵ 45</span></div>
+        <p class="dish-desc">Spiced plantain cubes fried golden, with a house ginger-chilli dipping sauce.</p>
+        <div class="dish-tags"><span class="dtag veg">Vegan</span><span class="dtag sig">Signature</span></div>
+      </div></div>
 
-      <div class="loc-grid">
+      <div class="dish show" data-cat="starters"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Yam Croquettes</span><span class="dish-price">GH₵ 52</span></div>
+        <p class="dish-desc">Crisp yam shells filled with spiced minced turkey, served with herb aioli.</p>
+        <div class="dish-tags"><span class="dtag new">New</span></div>
+      </div></div>
 
-        <div class="loc-card reveal">
-          <h3 class="loc-card-title">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
-              <circle cx="9" cy="9" r="7" />
-              <polyline points="9,4.5 9,9 11.5,11.5" />
-            </svg>
+      <div class="dish show" data-cat="starters"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Mushroom Bruschetta</span><span class="dish-price">GH₵ 55</span></div>
+        <p class="dish-desc">Toasted sourdough with sautéed mushrooms, garlic and fresh thyme.</p>
+        <div class="dish-tags"><span class="dtag veg">Vegetarian</span><span class="dtag cont">Continental</span></div>
+      </div></div>
+
+      <div class="dish show" data-cat="starters"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Smoked Fish Tartine</span><span class="dish-price">GH₵ 68</span></div>
+        <p class="dish-desc">Open bread with smoked tilapia, avocado cream and pickled shallots.</p>
+        <div class="dish-tags"><span class="dtag sig">Signature</span></div>
+      </div></div>
+
+      <!-- MAINS -->
+      <div class="dish" data-cat="mains"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Jollof Rice &amp; Chicken</span><span class="dish-price">GH₵ 140</span></div>
+        <p class="dish-desc">Party-style jollof, slow-cooked and smoky, with grilled chicken and fried plantain.</p>
+        <div class="dish-tags"><span class="dtag sig">Signature</span><span class="dtag spicy">Spicy</span></div>
+      </div></div>
+
+      <div class="dish" data-cat="mains"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Grilled Tilapia Plate</span><span class="dish-price">GH₵ 165</span></div>
+        <p class="dish-desc">Whole tilapia in shito and citrus, charcoal-grilled with banku and garden egg stew.</p>
+        <div class="dish-tags"><span class="dtag sig">Signature</span></div>
+      </div></div>
+
+      <div class="dish" data-cat="mains"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Fufu &amp; Light Soup</span><span class="dish-price">GH₵ 110</span></div>
+        <p class="dish-desc">Handpounded fufu in a clear tomato and pepper broth with goat meat or mushroom.</p>
+        <div class="dish-tags"><span class="dtag new">New</span></div>
+      </div></div>
+
+      <div class="dish" data-cat="mains"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Waakye Platter</span><span class="dish-price">GH₵ 125</span></div>
+        <p class="dish-desc">Slow-cooked rice and beans with wele, spaghetti, gari, shito and boiled egg.</p>
+        <div class="dish-tags"><span class="dtag spicy">Spicy option</span></div>
+      </div></div>
+
+      <div class="dish" data-cat="mains"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Kontomire Stew</span><span class="dish-price">GH₵ 95</span></div>
+        <p class="dish-desc">Cocoyam leaves in a rich palm-nut base with boiled yam and eggs.</p>
+        <div class="dish-tags"><span class="dtag veg">Vegetarian</span></div>
+      </div></div>
+
+      <div class="dish" data-cat="mains"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Clay Lamb Chops</span><span class="dish-price">GH₵ 210</span></div>
+        <p class="dish-desc">Spiced rack of lamb, slow-roasted, with coconut rice and roasted okra.</p>
+        <div class="dish-tags"><span class="dtag sig">Signature</span></div>
+      </div></div>
+
+      <!-- CONTINENTAL -->
+      <div class="dish" data-cat="continental"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Grilled Salmon Fillet</span><span class="dish-price">GH₵ 195</span></div>
+        <p class="dish-desc">Pan-seared salmon with lemon butter sauce, steamed vegetables and seasoned rice.</p>
+        <div class="dish-tags"><span class="dtag cont">Continental</span><span class="dtag sig">Signature</span></div>
+      </div></div>
+
+      <div class="dish" data-cat="continental"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Chicken Piccata</span><span class="dish-price">GH₵ 155</span></div>
+        <p class="dish-desc">Pan-fried chicken breast in a lemon-caper sauce, served with buttered pasta.</p>
+        <div class="dish-tags"><span class="dtag cont">Continental</span></div>
+      </div></div>
+
+      <div class="dish" data-cat="continental"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Beef Steak &amp; Fries</span><span class="dish-price">GH₵ 220</span></div>
+        <p class="dish-desc">Tender sirloin cooked to order with crispy fries and peppercorn sauce.</p>
+        <div class="dish-tags"><span class="dtag cont">Continental</span></div>
+      </div></div>
+
+      <div class="dish" data-cat="continental"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Mushroom Risotto</span><span class="dish-price">GH₵ 135</span></div>
+        <p class="dish-desc">Creamy arborio rice with mixed mushrooms, white wine and fresh herbs.</p>
+        <div class="dish-tags"><span class="dtag veg">Vegetarian</span><span class="dtag cont">Continental</span><span class="dtag new">New</span></div>
+      </div></div>
+
+      <div class="dish" data-cat="continental"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Club Sandwich</span><span class="dish-price">GH₵ 98</span></div>
+        <p class="dish-desc">Triple-stacked toasted bread with chicken, lettuce, tomato and mayo. Served with fries.</p>
+        <div class="dish-tags"><span class="dtag cont">Continental</span></div>
+      </div></div>
+
+      <div class="dish" data-cat="continental"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Pasta Arrabiata</span><span class="dish-price">GH₵ 120</span></div>
+        <p class="dish-desc">Penne in a spiced tomato sauce with garlic, olive oil and fresh basil.</p>
+        <div class="dish-tags"><span class="dtag veg">Vegetarian</span><span class="dtag cont">Continental</span></div>
+      </div></div>
+
+      <!-- DRINKS -->
+      <div class="dish" data-cat="drinks"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Sobolo Spritz</span><span class="dish-price">GH₵ 35</span></div>
+        <p class="dish-desc">House hibiscus water, fresh ginger and lime zest — lightly sparkling.</p>
+        <div class="dish-tags"><span class="dtag veg">Vegan</span><span class="dtag sig">Signature</span></div>
+      </div></div>
+
+      <div class="dish" data-cat="drinks"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Fresh Coconut Water</span><span class="dish-price">GH₵ 25</span></div>
+        <p class="dish-desc">Served chilled, straight from the shell, with a wedge of lime.</p>
+        <div class="dish-tags"><span class="dtag veg">Vegan</span></div>
+      </div></div>
+
+      <div class="dish" data-cat="drinks"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Passion Fruit Lemonade</span><span class="dish-price">GH₵ 32</span></div>
+        <p class="dish-desc">Fresh lemon, passion fruit pulp, mint and a touch of honey over ice.</p>
+        <div class="dish-tags"><span class="dtag veg">Vegan</span></div>
+      </div></div>
+
+      <div class="dish" data-cat="drinks"><div class="dish-inner">
+        <div class="dish-top"><span class="dish-name">Asaana</span><span class="dish-price">GH₵ 28</span></div>
+        <p class="dish-desc">Fermented corn drink, sweet and lightly tangy — a beloved Ghanaian classic.</p>
+        <div class="dish-tags"><span class="dtag new">New</span></div>
+      </div></div>
+
+    </div>
+    <p class="menu-note reveal">Prices include VAT. Allergen info available on request. Ask about today's specials.</p>
+  </div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="section-wrap">
+    <div class="about-layout">
+      <div class="about-img-wrap reveal">
+        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80" alt="Coast & Clay restaurant" loading="lazy">
+        <span class="about-img-label">Our kitchen · Ridge, Accra</span>
+      </div>
+      <div class="about-text reveal d1">
+        <p class="eyebrow">Our story</p>
+        <h2 class="section-title">Rooted in Ghana,<br><em>refined for today.</em></h2>
+        <p class="about-body">Coast &amp; Clay opened in 2019 with one idea: Ghanaian food deserves the same care and intention as any great cuisine. Our chefs grew up eating these dishes — they know what they're supposed to taste like. Every recipe starts there.</p>
+        <p class="about-body">Alongside our Ghanaian roots, we offer carefully chosen continental dishes held to the same standard — honest, well-made, and worth your time.</p>
+        <div class="about-stats">
+          <div class="astat"><div class="astat-num">2019</div><div class="astat-label">Est.</div></div>
+          <div class="astat"><div class="astat-num">18+</div><div class="astat-label">Dishes</div></div>
+          <div class="astat"><div class="astat-num">5★</div><div class="astat-label">Rating</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT + LOCATION ══ -->
+<section id="contact">
+  <div class="section-wrap">
+    <div class="reveal">
+      <p class="eyebrow contact-eyebrow">Find us</p>
+      <h2 class="section-title contact-title">Come <em>see us.</em></h2>
+    </div>
+    <div class="contact-grid">
+
+      <!-- LEFT: contact details -->
+      <div class="reveal">
+        <div class="contact-details">
+          <div class="citem">
+            <div class="cicon">📞</div>
+            <div><div class="clabel">Phone</div><div class="cval"><a href="tel:+233554744061">+233 55 474 4061</a></div></div>
+          </div>
+          <div class="citem">
+            <div class="cicon">✉️</div>
+            <div><div class="clabel">Email</div><div class="cval"><a href="mailto:coastandclay.accra@gmail.com">coastandclay.accra@gmail.com</a></div></div>
+          </div>
+          <div class="citem">
+            <div class="cicon">📍</div>
+            <div><div class="clabel">Address</div><div class="cval">Ridge, Accra, Ghana</div></div>
+          </div>
+        </div>
+        <div class="contact-note">
+          <strong>Large group or private event?</strong>
+          <p>For groups of 8 or more, please call or email ahead so we can take good care of you.</p>
+        </div>
+      </div>
+
+      <!-- RIGHT: location stacked blocks -->
+      <div class="location-stack reveal d1">
+        <div class="loc-block">
+          <p class="loc-block-title">
+            <svg width="13" height="13" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="9" r="7"/><polyline points="9,4.5 9,9 11.5,11.5"/></svg>
             Opening Hours
-          </h3>
-          <ul class="hours-list">
-            <li class="hr-row"><span class="hr-day">Monday – Friday</span><span class="hr-time">8:00 am – 10:00 pm</span></li>
-            <li class="hr-row"><span class="hr-day">Saturday</span><span class="hr-time">11:00 am – 12:00 am</span></li>
-            <li class="hr-row"><span class="hr-day">Sunday</span><span class="hr-time">11:00 am – 12:00 am</span></li>
-          </ul>
+          </p>
+          <div class="hours-rows">
+            <div class="hr"><span class="hr-day">Mon – Fri</span><span class="hr-time">8:00 am – 10:00 pm</span></div>
+            <div class="hr"><span class="hr-day">Saturday</span><span class="hr-time">11:00 am – 12:00 am</span></div>
+            <div class="hr"><span class="hr-day">Sunday</span><span class="hr-time">11:00 am – 12:00 am</span></div>
+          </div>
         </div>
-
-        <div class="loc-card reveal">
-          <h3 class="loc-card-title">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
-              <path d="M9 2C6.2 2 4 4.2 4 7c0 4.5 5 9 5 9s5-4.5 5-9c0-2.8-2.2-5-5-5z" />
-              <circle cx="9" cy="7" r="2" />
-            </svg>
-            Address
-          </h3>
-          <p class="addr">Ridge<br>Accra, Ghana</p>
+        <div class="loc-block">
+          <p class="loc-block-title">
+            <svg width="13" height="13" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 2C6.2 2 4 4.2 4 7c0 4.5 5 9 5 9s5-4.5 5-9c0-2.8-2.2-5-5-5z"/><circle cx="9" cy="7" r="2"/></svg>
+            Location
+          </p>
+          <p class="loc-address">Ridge, Accra</p>
           <div class="map">
-            <div class="mr h" style="top:47%;height:9px;"></div>
-            <div class="mr v" style="left:46%;width:9px;"></div>
-            <div class="mr h" style="top:24%;height:4px;opacity:0.5;"></div>
-            <div class="mr h" style="top:71%;height:4px;opacity:0.5;"></div>
-            <div class="mr v" style="left:24%;width:4px;opacity:0.5;"></div>
-            <div class="mr v" style="left:69%;width:4px;opacity:0.5;"></div>
+            <div class="mr h" style="top:47%;height:8px;"></div>
+            <div class="mr v" style="left:46%;width:8px;"></div>
+            <div class="mr h" style="top:24%;height:4px;opacity:0.4;"></div>
+            <div class="mr h" style="top:71%;height:4px;opacity:0.4;"></div>
+            <div class="mr v" style="left:24%;width:4px;opacity:0.4;"></div>
+            <div class="mr v" style="left:69%;width:4px;opacity:0.4;"></div>
             <div class="mb" style="top:10%;left:10%;width:28%;height:11%;"></div>
             <div class="mb" style="top:10%;left:58%;width:30%;height:13%;"></div>
             <div class="mb" style="top:58%;left:10%;width:24%;height:18%;"></div>
             <div class="mb" style="top:60%;left:58%;width:30%;height:14%;"></div>
             <div class="mpin"><div class="mdot"></div><div class="mlabel">Coast &amp; Clay</div></div>
           </div>
-          <a href="https://maps.google.com/?q=Ridge,Accra,Ghana" target="_blank" rel="noopener" class="dir-a">Get Directions →</a>
+          <a href="https://maps.google.com/?q=Ridge,Accra,Ghana" target="_blank" rel="noopener" class="dir-link">Get Directions →</a>
         </div>
-
-        <div class="loc-card reveal">
-          <h3 class="loc-card-title">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
-              <rect x="2" y="4" width="14" height="11" rx="1" />
-              <polyline points="2,4 9,10 16,4" />
-            </svg>
+        <div class="loc-block">
+          <p class="loc-block-title">
+            <svg width="13" height="13" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="4" width="14" height="11" rx="1"/><polyline points="2,4 9,10 16,4"/></svg>
             Good to Know
-          </h3>
-          <div class="info-r"><span class="ik">Dine in</span><span class="iv">Yes</span></div>
-          <div class="info-r"><span class="ik">Takeaway</span><span class="iv">Available daily</span></div>
-          <div class="info-r"><span class="ik">Parking</span><span class="iv">Street parking available</span></div>
-          <div class="info-r"><span class="ik">Family friendly</span><span class="iv">Yes</span></div>
-          <div class="info-r"><span class="ik">Private events</span><span class="iv">On request</span></div>
-          <div class="info-r"><span class="ik">Dress code</span><span class="iv">Come as you are</span></div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== CONTACT ========== -->
-  <section id="contact">
-    <div class="wrap">
-      <span class="label">Contact</span>
-      <h2 class="sec-title">We'd love to <em>hear from you.</em></h2>
-      <p class="sec-sub">Give us a call, send an email, or just show up. We're always glad to see you.</p>
-
-      <div class="contact-grid">
-        <div class="reveal">
-          <div class="cdet">
-            <div class="cico" aria-hidden="true">📞</div>
-            <div>
-              <div class="clabel">Phone</div>
-              <div class="cval"><a href="tel:+233554744061">+233 55 474 4061</a></div>
-            </div>
-          </div>
-          <div class="cdet">
-            <div class="cico" aria-hidden="true">✉️</div>
-            <div>
-              <div class="clabel">Email</div>
-              <div class="cval"><a href="mailto:info@coastandclay.com">info@coastandclay.com</a></div>
-            </div>
-          </div>
-          <div class="cdet">
-            <div class="cico" aria-hidden="true">✉️</div>
-            <div>
-              <div class="clabel">Gmail</div>
-              <div class="cval"><a href="mailto:coastandclay.accra@gmail.com">coastandclay.accra@gmail.com</a></div>
-            </div>
-          </div>
-          <div class="cdet">
-            <div class="cico" aria-hidden="true">📍</div>
-            <div>
-              <div class="clabel">Address</div>
-              <div class="cval">Ridge, Accra, Ghana</div>
-            </div>
-          </div>
-          <div class="contact-note">
-            <strong>Coming in for a big group?</strong>
-            <p>For groups of 8 or more or private event enquiries, reach us by phone or email so we can get things sorted in advance.</p>
-          </div>
-        </div>
-
-        <div class="reveal">
-          <div class="map-big">
-            <div class="mr2 h" style="top:47%;height:8px;"></div>
-            <div class="mr2 v" style="left:46%;width:8px;"></div>
-            <div class="mr2 h" style="top:24%;height:4px;opacity:0.6;"></div>
-            <div class="mr2 h" style="top:72%;height:4px;opacity:0.6;"></div>
-            <div class="mr2 v" style="left:24%;width:4px;opacity:0.6;"></div>
-            <div class="mr2 v" style="left:70%;width:4px;opacity:0.6;"></div>
-            <div class="mb2" style="top:10%;left:10%;width:28%;height:11%;"></div>
-            <div class="mb2" style="top:10%;left:58%;width:30%;height:13%;"></div>
-            <div class="mb2" style="top:58%;left:10%;width:24%;height:18%;"></div>
-            <div class="mb2" style="top:60%;left:58%;width:30%;height:14%;"></div>
-            <div class="mpin2"><div class="mdot2"></div><div class="mlabel2">Coast &amp; Clay · Ridge, Accra</div></div>
-          </div>
-          <div class="map-caption">
-            <span>Ridge, Accra, Ghana</span>
-            <a href="https://maps.google.com/?q=Ridge,Accra,Ghana" target="_blank" rel="noopener">Open in Maps →</a>
+          </p>
+          <div class="info-rows">
+            <div class="irow"><span class="ikey">Dine in</span><span class="ival">Yes</span></div>
+            <div class="irow"><span class="ikey">Takeaway</span><span class="ival">Available daily</span></div>
+            <div class="irow"><span class="ikey">Parking</span><span class="ival">Street parking</span></div>
+            <div class="irow"><span class="ikey">Family friendly</span><span class="ival">Yes</span></div>
+            <div class="irow"><span class="ikey">Private events</span><span class="ival">On request</span></div>
           </div>
         </div>
       </div>
+
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ========== FOOTER ========== -->
-  <footer>
-    <div class="footer-kente"></div>
-    <div class="footer-top">
-      <div>
-        <div class="footer-logo">Coast &amp; Clay<span>Ridge · Accra · Ghana</span></div>
-        <p class="footer-tagline">Ghanaian dishes with a modern touch. Good food, warm hospitality, a relaxed experience.</p>
-      </div>
-      <div class="footer-links">
-        <a href="#home">Home</a>
-        <a href="#menu">Menu</a>
-        <a href="#location">Location</a>
-        <a href="#contact">Contact</a>
-      </div>
-      <div class="footer-contact">
-        <p><a href="tel:+233554744061">+233 55 474 4061</a></p>
-        <p><a href="mailto:coastandclay.accra@gmail.com">coastandclay.accra@gmail.com</a></p>
-        <p>Ridge, Accra, Ghana</p>
-        <p style="margin-top:8px;font-size:11px;letter-spacing:0.06em;opacity:0.7;">Mon–Fri &nbsp;8:00 am – 10:00 pm<br>Sat–Sun &nbsp;11:00 am – 12:00 am</p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p class="footer-copy">© 2026 Coast &amp; Clay. All rights reserved.</p>
-      <p class="footer-copy" style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;">Accra, Ghana</p>
-    </div>
-  </footer>
+<!-- ══ FOOTER — ultra minimal ══ -->
+<footer>
+  <div class="footer-logo-wrap">
+    <a href="#home" class="footer-name">Coast &amp; Clay</a>
+    <span class="footer-sub">Ridge · Accra · Ghana</span>
+  </div>
+  <ul class="footer-nav">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="footer-rule"></div>
+  <p class="footer-copy">© 2026 Coast &amp; Clay. All rights reserved. · Designed &amp; built by [Your Name]</p>
+</footer>
 
-  <script>
-    /* ---------- NAV BAR: add shadow after you scroll ---------- */
-    const navBar = document.getElementById("nav");
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
 
-    window.addEventListener("scroll", function () {
-      const scrolledDown = window.scrollY > 40;
-      navBar.classList.toggle("scrolled", scrolledDown);
+  document.getElementById('hbg').addEventListener('click', () => document.getElementById('mob').classList.add('open'));
+  document.getElementById('mobClose').addEventListener('click', () => document.getElementById('mob').classList.remove('open'));
+  document.querySelectorAll('.ml').forEach(l => l.addEventListener('click', () => document.getElementById('mob').classList.remove('open')));
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      const cat = btn.dataset.cat;
+      document.querySelectorAll('.dish').forEach(d => d.classList.toggle('show', d.dataset.cat === cat));
     });
+  });
 
-    /* ---------- MOBILE MENU: open / close ---------- */
-    const hamburgerButton = document.getElementById("hbg");
-    const mobileMenu = document.getElementById("mob");
-    const mobileCloseButton = document.getElementById("mobClose");
-
-    hamburgerButton.addEventListener("click", function () {
-      mobileMenu.classList.add("open");
-    });
-
-    mobileCloseButton.addEventListener("click", function () {
-      mobileMenu.classList.remove("open");
-    });
-
-    // When a menu link is clicked, hide the mobile menu again
-    const mobileLinks = document.querySelectorAll(".ml");
-    mobileLinks.forEach(function (oneLink) {
-      oneLink.addEventListener("click", function () {
-        mobileMenu.classList.remove("open");
-      });
-    });
-
-    /* ---------- MENU TABS: show only dishes for the chosen category ---------- */
-    const allTabButtons = document.querySelectorAll(".tab-btn");
-
-    allTabButtons.forEach(function (clickedButton) {
-      clickedButton.addEventListener("click", function () {
-        // Remove "on" from every tab, then add "on" only to the tab that was clicked
-        allTabButtons.forEach(function (btn) {
-          btn.classList.remove("on");
-        });
-        clickedButton.classList.add("on");
-
-        // Read which category this button is for (starters, mains, or drinks)
-        const categoryName = clickedButton.dataset.cat;
-
-        // Loop every dish card and show it only if its data-cat matches
-        const allDishes = document.querySelectorAll(".dish");
-        allDishes.forEach(function (dishCard) {
-          const isMatch = dishCard.dataset.cat === categoryName;
-          dishCard.classList.toggle("show", isMatch);
-        });
-      });
-    });
-
-    /* ---------- REVEAL ON SCROLL: fade in location cards ---------- */
-    const observerOptions = { threshold: 0.1 };
-    const revealObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("in");
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, observerOptions);
-
-    const revealElements = document.querySelectorAll(".reveal");
-    revealElements.forEach(function (element) {
-      revealObserver.observe(element);
-    });
-
-    /* ---------- HERO TEXT: simple fade-in when page loads ---------- */
-    const heroLeftChildren = document.querySelectorAll(".hero-left > *");
-    heroLeftChildren.forEach(function (child, index) {
-      child.style.opacity = "0";
-      child.style.transform = "translateY(16px)";
-      child.style.transition =
-        "opacity 0.65s ease " + (160 + index * 100) + "ms, transform 0.65s ease " + (160 + index * 100) + "ms";
-
-      window.setTimeout(function () {
-        child.style.opacity = "1";
-        child.style.transform = "none";
-      }, 30);
-    });
-  </script>
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+</script>
 </body>
 </html>
